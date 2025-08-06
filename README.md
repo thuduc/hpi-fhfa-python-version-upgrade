@@ -20,25 +20,21 @@ The original project demonstrated Claude Code's ability to generate complete imp
 
 1. **Step 1**: Generate Product Requirements Document (PRD) from FHFA whitepaper using Google Gemini 2.5 Pro
 2. **Step 2**: Create implementation plan using Claude Code (Claude Opus 4)
-3. **Step 3**: Generate 3 complete implementations with >80% test coverage:
-   - Python + pandas/statsmodels/scikit-learn *(1 hour)*
-   - Python + polars *(2 hours)* 
-   - Python + PySpark/MLlib *(4 hours)*
+3. **Step 3**: Generate multiple complete implementations with >80% test coverage using different Python data science stacks
 
 **Total development time**: ~8 hours of autonomous Claude Code sessions
 
 ## Python 3.12 Upgrade Status
 
-This upgraded version includes two implementations that have been successfully migrated to Python 3.12:
+This upgraded version includes the pandas implementation that has been successfully migrated to Python 3.12:
 
-### Available Implementations
+### Available Implementation
 
 | Implementation | Status | Test Success Rate | Python Version | Notes |
 |---------------|---------|-------------------|----------------|-------|
 | **impl-pandas** | ✅ Production Ready | 100% (76/76) | Python 3.12 | Complete upgrade, all tests passing |
-| **impl-polars** | ✅ Functional | 98.4% (123/125) | Python 3.12 | 2 minor test fixes needed |
 
-*Note: The original impl-pyspark implementation was not included in this Python 3.12 upgrade project.*
+*Note: This Python 3.12 upgrade project focuses on the pandas implementation from the original project.*
 
 ## Quick Start
 
@@ -50,7 +46,6 @@ python --version  # Should show Python 3.12.x
 
 ### Running the Code
 
-#### Option 1: pandas Implementation (Recommended)
 ```bash
 cd impl-pandas
 pip install -r requirements.txt
@@ -66,25 +61,14 @@ python -m rsai.src.main \
     --end-year 2023
 ```
 
-#### Option 2: polars Implementation  
-```bash
-cd impl-polars
-pip install -r requirements.txt
-pip install -e .
-
-# Run tests to verify installation
-pytest tests/ -v
-```
-
 ### Testing
 
-#### Run All Tests
 ```bash
-# pandas implementation
+# Run all tests
 cd impl-pandas && python -m pytest tests/ -v
 
-# polars implementation  
-cd impl-polars && python -m pytest tests/ -v
+# Run with coverage report
+cd impl-pandas && python -m pytest tests/ -v --cov=rsai --cov-report=term-missing
 ```
 
 ## Upgrade Benefits
@@ -92,7 +76,7 @@ cd impl-polars && python -m pytest tests/ -v
 ### Performance Improvements
 - **15% faster execution** on average with Python 3.12
 - **Better memory usage** for large real estate datasets
-- **Enhanced pandas/polars performance** with updated library versions
+- **Enhanced pandas performance** with updated library versions
 
 ### Developer Experience
 - **Modern type hints**: Using built-in generics (`list[str]`, `dict[str, Any]`)
@@ -108,10 +92,26 @@ cd impl-polars && python -m pytest tests/ -v
 ## Documentation
 
 - **Upgrade Details**: See [PYTHON312_UPGRADE_COMPLETE.md](PYTHON312_UPGRADE_COMPLETE.md) for comprehensive upgrade documentation
-- **Implementation Guides**: Refer to individual README.md files in implementation directories:
-  - [impl-pandas/README.md](impl-pandas/README.md)
-  - [impl-polars/README.md](impl-polars/README.md)
+- **Implementation Guide**: See [impl-pandas/README.md](impl-pandas/README.md) for detailed usage instructions
 - **Original Project**: For methodology and original Claude Code sessions, see the [original project](https://github.com/thuduc/hpi-fhfa.git)
+
+## PoC Assessment
+
+### Core Logic
+The Python 3.12 upgrade was primarily a dependency and modernization effort. **The core data processing and calculation logic remains consistent**, but the newer version is built on more recent and robust libraries and uses a slightly more modern Python syntax.
+
+The fundamental application logic for the HPI calculation within the impl-pandas module appears to be **unchanged**. The main.py files are functionally the same.
+
+### Modernization
+The upgrade to Python 3.12 modernized the codebase in two key ways:
+- **Modern Python type hinting**: Using built-in generics (`list[str]`, `dict[str, Any]`) instead of importing from `typing`
+- **Significantly updated versions** of all core dependencies for better performance and compatibility
+
+### New Features
+**Addition of the pyarrow library** to requirements.txt suggests that support for writing output to Parquet files is now properly backed by the necessary dependency, which was missing in the Python 3.8+ implementation.
+
+### Pydantic Upgrade
+The upgrade of **Pydantic to V2** is noteworthy. Pydantic V2 introduced significant performance improvements and some breaking changes from V1. While the main.py doesn't show Pydantic usage directly, it's used in other modules for enhanced data validation with better performance characteristics.
 
 ## Project Files
 
